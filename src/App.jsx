@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import TitleH1 from "./components/Titles/TitleH1";
+import Button from "./components/Buttons/Button"
 
 class App extends Component {
   render() {
@@ -7,7 +8,9 @@ class App extends Component {
       <div className="container">
         <TitleH1>Library of books</TitleH1>
         <p>Livres</p>
-        <button>Ajouter</button>
+        <Button result="success" clic={() => console.log('Add')}>Add</Button>
+        <Button result="warning" clic={() => console.log('Edit')}>Edit</Button>
+        <Button result="danger" clic={() => console.log('Delete')}>Delete</Button>
       </div>
     );
   }
