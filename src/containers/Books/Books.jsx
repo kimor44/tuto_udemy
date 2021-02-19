@@ -45,22 +45,23 @@ class Books extends Component {
 
     this.setState({ books: newTab });
   };
-
+  
   handleAddBook = (title, author, nbPages) => {
     const newBookList = [...this.state.books];
-
+    
     const newBook = {
       id: this.state.lastIdBook + 1,
       title: title,
       author: author,
       pages: nbPages,
     };
-
+    
     newBookList.push(newBook);
     
     this.setState((oldState) => {
       return { books: newBookList, lastIdBook: oldState.lastIdBook + 1 };
     });
+    this.props.closeAddBook();
   };
 
   render() {

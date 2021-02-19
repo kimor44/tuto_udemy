@@ -14,6 +14,11 @@ class AddForm extends Component {
       this.state.authorEntered,
       this.state.nbPagesEntered
     );
+    this.setState({
+      titleEntered: "",
+      authorEntered: "",
+      nbPagesEntered: "",
+    });
   };
   render() {
     return (
