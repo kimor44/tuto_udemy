@@ -7,6 +7,14 @@ class AddForm extends Component {
     authorEntered: "",
     nbPagesEntered: "",
   };
+  handleValidationForm = (event) => {
+    event.preventDefault();
+    this.props.validation(
+      this.state.titleEntered,
+      this.state.authorEntered,
+      this.state.nbPagesEntered
+    );
+  };
   render() {
     return (
       <>
@@ -18,7 +26,7 @@ class AddForm extends Component {
         </h2>
         <form>
           <div className="mb-3">
-            <label for="title" className="form-label">
+            <label htmlFor="title" className="form-label">
               Book title
             </label>
             <input
@@ -32,7 +40,7 @@ class AddForm extends Component {
             />
           </div>
           <div className="mb-3">
-            <label for="author" className="form-label">
+            <label htmlFor="author" className="form-label">
               Book author
             </label>
             <input
@@ -46,11 +54,11 @@ class AddForm extends Component {
             />
           </div>
           <div className="mb-3">
-            <label for="nbPages" className="form-label">
+            <label htmlFor="nbPages" className="form-label">
               Number of pages
             </label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="nbPages"
               value={this.state.nbPagesEntered}
@@ -59,7 +67,9 @@ class AddForm extends Component {
               }
             />
           </div>
-          <Button result="primary">Submit</Button>
+          <Button result="primary" clic={this.handleValidationForm}>
+            Submit
+          </Button>
         </form>
       </>
     );

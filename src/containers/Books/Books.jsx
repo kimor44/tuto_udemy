@@ -31,6 +31,7 @@ class Books extends Component {
         pages: 563,
       },
     ],
+    lastIdBook: 17,
   };
 
   deletePersonHandler = (id) => {
@@ -43,6 +44,23 @@ class Books extends Component {
     newTab.splice(numCaseBook, 1);
 
     this.setState({ books: newTab });
+  };
+
+  handleAddBook = (title, author, nbPages) => {
+    const newBookList = [...this.state.books];
+
+    const newBook = {
+      id: this.state.lastIdBook + 1,
+      title: title,
+      author: author,
+      pages: nbPages,
+    };
+
+    newBookList.push(newBook);
+    
+    this.setState((oldState) => {
+      return { books: newBookList, lastIdBook: oldState.lastIdBook + 1 };
+    });
   };
 
   render() {
@@ -74,7 +92,7 @@ class Books extends Component {
             })}
           </tbody>
         </table>
-        {this.props.AddBook && <AddForm />}
+        {this.props.AddBook && <AddForm validation={this.handleAddBook} />}
       </>
     );
   }
