@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Book from "./Book/Book";
 import AddForm from "./AddForm/AddForm";
+import EditBook from "./EditBook/EditBook";
 
 class Books extends Component {
   state = {
@@ -23,7 +24,12 @@ class Books extends Component {
         author: "Marc Merlin",
         pages: 250,
       },
-      { id: 12, title: "Le virus d'Asie", author: "Thya Milo", pages: 120 },
+      {
+        id: 12,
+        title: "Le virus d'Asie",
+        author: "Thya Milo",
+        pages: 120,
+      },
       {
         id: 17,
         title: "Dans les bois éternels",
@@ -32,9 +38,27 @@ class Books extends Component {
       },
     ],
     lastIdBook: 17,
+    idBookToEdit: 0,
   };
 
-  deletePersonHandler = (id) => {
+  editBookHandler = (id, title, author, nbPages) => {
+    const numCaseBook = this.state.books.findIndex((element) => {
+      return element.id === id;
+    });
+
+    const newTab = [...this.state.books];
+
+    newTab[numCaseBook] = {
+      id,
+      title,
+      author,
+      pages: nbPages,
+    };
+
+    this.setState({ books: newTab, idBookToEdit: 0 });
+  };
+
+  deleteBookHandler = (id) => {
     const numCaseBook = this.state.books.findIndex((element) => {
       return element.id === id;
     });
@@ -45,19 +69,19 @@ class Books extends Component {
 
     this.setState({ books: newTab });
   };
-  
+
   handleAddBook = (title, author, nbPages) => {
     const newBookList = [...this.state.books];
-    
+
     const newBook = {
       id: this.state.lastIdBook + 1,
       title: title,
       author: author,
       pages: nbPages,
     };
-    
+
     newBookList.push(newBook);
-    
+
     this.setState((oldState) => {
       return { books: newBookList, lastIdBook: oldState.lastIdBook + 1 };
     });
@@ -80,16 +104,31 @@ class Books extends Component {
           </thead>
           <tbody>
             {this.state.books.map((book) => {
-              return (
-                <tr key={book.id}>
-                  <Book
-                    title={book.title}
-                    author={book.author}
-                    pages={book.pages}
-                    deleteBook={() => this.deletePersonHandler(book.id)}
-                  />
-                </tr>
-              );
+              if (book.id !== this.state.idBookToEdit) {
+                return (
+                  <tr key={book.id}>
+                    <Book
+                      title={book.title}
+                      author={book.author}
+                      pages={book.pages}
+                      deleteBook={() => this.deleteBookHandler(book.id)}
+                      editBook={() => this.setState({ idBookToEdit: book.id })}
+                    />
+                  </tr>
+                );
+              } else {
+                return (
+                  <tr key={book.id}>
+                    <EditBook
+                      id={book.id}
+                      title={book.title}
+                      author={book.author}
+                      pages={book.pages}
+                      confirm={this.editBookHandler}
+                    />
+                  </tr>
+                );
+              }
             })}
           </tbody>
         </table>

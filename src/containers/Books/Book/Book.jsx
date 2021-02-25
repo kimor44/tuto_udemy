@@ -7,7 +7,7 @@ const Book = (props) => (
     <td>{props.author}</td>
     <td>{props.pages}</td>
     <td>
-      <Button result="warning" clic={() => console.log("Edit")}>
+      <Button result="warning" clic={props.editBook}>
         EDIT
       </Button>
     </td>
