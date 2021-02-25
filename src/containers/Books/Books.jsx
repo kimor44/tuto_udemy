@@ -113,7 +113,12 @@ class Books extends Component {
     return (
       <>
         {this.state.alertMessage && (
-          <Alert typeAlert={this.state.alertMessage.type}>{this.state.alertMessage.text}</Alert>
+          <Alert
+            closeAlert={() => this.setState({ alertMessage: null })}
+            typeAlert={this.state.alertMessage.type}
+          >
+            {this.state.alertMessage.text}
+          </Alert>
         )}
         <table className="table text-center">
           <thead>
