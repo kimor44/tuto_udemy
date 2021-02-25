@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Book from "./Book/Book";
 import AddForm from "./AddForm/AddForm";
 import EditBook from "./EditBook/EditBook";
+import Alert from "../../components/Alert/Alert";
 
 class Books extends Component {
   state = {
@@ -39,6 +40,7 @@ class Books extends Component {
     ],
     lastIdBook: 17,
     idBookToEdit: 0,
+    alertMessage: null,
   };
 
   editBookHandler = (id, title, author, nbPages) => {
@@ -55,7 +57,14 @@ class Books extends Component {
       pages: nbPages,
     };
 
-    this.setState({ books: newTab, idBookToEdit: 0 });
+    this.setState({
+      books: newTab,
+      idBookToEdit: 0,
+      alertMessage: {
+        text: "Book edited successfully",
+        type: "alert-warning",
+      },
+    });
   };
 
   deleteBookHandler = (id) => {
@@ -67,10 +76,16 @@ class Books extends Component {
 
     newTab.splice(numCaseBook, 1);
 
-    this.setState({ books: newTab });
+    this.setState({
+      books: newTab,
+      alertMessage: {
+        text: "Book deleted successfully",
+        type: "alert-danger",
+      },
+    });
   };
 
-  handleAddBook = (title, author, nbPages) => {
+  AddBookhandler = (title, author, nbPages) => {
     const newBookList = [...this.state.books];
 
     const newBook = {
@@ -86,11 +101,20 @@ class Books extends Component {
       return { books: newBookList, lastIdBook: oldState.lastIdBook + 1 };
     });
     this.props.closeAddBook();
+    this.setState({
+      alertMessage: {
+        text: "Book added successfully",
+        type: "alert-success",
+      },
+    });
   };
 
   render() {
     return (
       <>
+        {this.state.alertMessage && (
+          <Alert typeAlert={this.state.alertMessage.type}>{this.state.alertMessage.text}</Alert>
+        )}
         <table className="table text-center">
           <thead>
             <tr className="table-dark">
@@ -132,7 +156,7 @@ class Books extends Component {
             })}
           </tbody>
         </table>
-        {this.props.AddBook && <AddForm validation={this.handleAddBook} />}
+        {this.props.AddBook && <AddForm validation={this.AddBookhandler} />}
       </>
     );
   }

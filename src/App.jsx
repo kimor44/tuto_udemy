@@ -5,20 +5,23 @@ import Books from "./containers/Books/Books";
 
 class App extends Component {
   state = {
-    addBook: false
-  }
+    addBook: false,
+  };
 
   toggleAddButton = () => {
     this.setState((oldState) => {
-      return ({addBook: !oldState.addBook})
-    })
-  }
+      return { addBook: !oldState.addBook };
+    });
+  };
 
   render() {
     return (
       <div className="container">
         <TitleH1>Library of books</TitleH1>
-        <Books AddBook={this.state.addBook} closeAddBook={() => this.setState({addBook: false})} />
+        <Books
+          AddBook={this.state.addBook}
+          closeAddBook={() => this.setState({ addBook: false })}
+        />
         <Button result="success" css="w-100" clic={this.toggleAddButton}>
           {!this.state.addBook ? "Add" : "Close add"}
         </Button>
