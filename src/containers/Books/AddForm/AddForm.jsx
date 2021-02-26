@@ -1,25 +1,9 @@
 import React, { Component } from "react";
 import Button from "../../../components/Buttons/Button";
+import { withFormik } from "formik";
+import * as Yup from "yup";
 
 class AddForm extends Component {
-  state = {
-    titleEntered: "",
-    authorEntered: "",
-    nbPagesEntered: "",
-  };
-  handleValidationForm = (event) => {
-    event.preventDefault();
-    this.props.validation(
-      this.state.titleEntered,
-      this.state.authorEntered,
-      this.state.nbPagesEntered
-    );
-    this.setState({
-      titleEntered: "",
-      authorEntered: "",
-      nbPagesEntered: "",
-    });
-  };
   render() {
     return (
       <>
@@ -38,11 +22,14 @@ class AddForm extends Component {
               type="text"
               className="form-control"
               id="title"
-              value={this.state.titleEntered}
-              onChange={(event) =>
-                this.setState({ titleEntered: event.target.value })
-              }
+              name="title"
+              value={this.props.values.title}
+              onChange={this.props.handleChange}
+              onBlur={this.props.handleBlur}
             />
+            {this.props.touched.title && this.props.errors.title && (
+              <span style={{ color: "red" }}>{this.props.errors.title}</span>
+            )}
           </div>
           <div className="mb-3">
             <label htmlFor="author" className="form-label">
@@ -52,11 +39,14 @@ class AddForm extends Component {
               type="text"
               className="form-control"
               id="author"
-              value={this.state.authorEntered}
-              onChange={(event) =>
-                this.setState({ authorEntered: event.target.value })
-              }
+              name="author"
+              value={this.props.values.author}
+              onChange={this.props.handleChange}
+              onBlur={this.props.handleBlur}
             />
+            {this.props.touched.author && this.props.errors.author && (
+              <span style={{ color: "red" }}>{this.props.errors.author}</span>
+            )}
           </div>
           <div className="mb-3">
             <label htmlFor="nbPages" className="form-label">
@@ -66,13 +56,18 @@ class AddForm extends Component {
               type="number"
               className="form-control"
               id="nbPages"
-              value={this.state.nbPagesEntered}
+              name="nbPages"
+              value={this.props.values.nbPages}
               onChange={(event) =>
-                this.setState({ nbPagesEntered: event.target.value })
+                this.props.setFieldValue('nbPages', parseInt(event.target.value))
               }
+              onBlur={this.props.handleBlur}
             />
+            {this.props.touched.nbPages && this.props.errors.nbPages && (
+              <span style={{ color: "red" }}>{this.props.errors.nbPages}</span>
+            )}
           </div>
-          <Button result="primary" clic={this.handleValidationForm}>
+          <Button result="primary" clic={this.props.handleSubmit}>
             Submit
           </Button>
         </form>
@@ -81,4 +76,25 @@ class AddForm extends Component {
   }
 }
 
-export default AddForm;
+export default withFormik({
+  mapPropsToValues: () => ({
+    title: "",
+    author: "",
+    nbPages: "",
+  }),
+  validationSchema: Yup.object().shape({
+    title: Yup.string()
+      .min(3, "The title must be more than 3 characters")
+      .max(15, "The title must be less than 15 characters")
+      .required("Title is mandatory"),
+    author: Yup.string()
+      .min(3, "The author must be more than 3 characters")
+      .required("The author is mandatory"),
+    nbPages: Yup.number()
+      .lessThan(1000, "Number must be less than 1000")
+      .moreThan(50, "Number must be more than 50"),
+  }),
+  handleSubmit: (values, { props }) => {
+    props.validation(values.title, values.author, values.nbPages);
+  },
+})(AddForm);
